@@ -39,12 +39,6 @@ if (!globalThis.mongooseCache) {
  * - Type-safe usage of Mongoose in TypeScript.
  */
 export async function connectToDatabase(): Promise<typeof mongoose> {
-  const uri = process.env.MONGODB_URI;
-
-  if (!uri) {
-    throw new Error('MONGODB_URI environment variable is not set.');
-  }
-
   // Reuse existing connection if available.
   if (cached.conn) {
     return cached.conn;
@@ -52,6 +46,12 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
 
   // If a connection is already being established, await that.
   if (!cached.promise) {
+    const uri = process.env.MONGODB_URI;
+
+    if (!uri) {
+      throw new Error('MONGODB_URI environment variable is not set.');
+    }
+
     const options: ConnectOptions = {
       bufferCommands: false,
       maxPoolSize: 10,

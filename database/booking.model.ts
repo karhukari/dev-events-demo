@@ -40,6 +40,9 @@ const BookingSchema = new Schema<BookingFields>(
   { timestamps: true }
 );
 
+// Prevent duplicate bookings for the same event/email pair.
+BookingSchema.index({ eventId: 1, email: 1 }, { unique: true });
+
 const isValidEmail = (value: string): boolean =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
